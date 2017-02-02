@@ -93,20 +93,20 @@ class UnfollowCheck(object):
         print(self.unfollowers)
 
         if len(self.unfollowers) > 0:
-            ids = ",".join(self.unfollowers)
-            print(ids)
 
-            info = self.api.get_friendship_status_by_id(ids)
+            info = self.api.get_friendship_status_by_id(self.unfollowers)
+            print(info, len(info))
 
             # Twitter returns a dict response when error, list of dicts when success
-            if len(info) > 0 and type(info) != list and info.get('errors', 'no_error') != 'no_error':
-                print('error getting unfollowers info: %s' % info.get('errors', 'no_error'))
-            else:
+            if len(info) > 0 and type(info) == list:
                 for d in info:
                     print(d.get('id_str') + " " + d.get('name') + " @" + d.get('screen_name'))
 
                 return info
+            else:
+                print('error getting unfollowers info')
+
         else:
             print('no unfollowers found')
 
-            return ""
+        return []

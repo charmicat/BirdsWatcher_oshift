@@ -80,6 +80,20 @@ def tweet():
     return redirect(url_for('index'))
 
 
+@app.route('/unfollow')
+def unfollow():
+    user = request.args.get('user', '')
+    flash("unfollow " + user)
+    return redirect(url_for('index'))
+
+
+@app.route('/follow')
+def follow():
+    user = request.args.get('user', '')
+    flash("follow " + user)
+    return redirect(url_for('index'))
+
+
 @app.route('/login')
 def login():
     callback_url = url_for('oauthorized', next=request.args.get('next'))

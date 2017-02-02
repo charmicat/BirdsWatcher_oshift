@@ -7,6 +7,7 @@ Created on Jan 22, 2016
 '''
 
 from flask import flash
+import json
 
 
 class TwitterApiAccess(object):
@@ -28,12 +29,13 @@ class TwitterApiAccess(object):
         print(session['twitter_oauth'])
         print(consumer_key, consumer_secret, token_key, token_secret)
         r = self.api.request('users/show.json', {'screen_name': self.session['twitter_oauth']['screen_name']})
+        if r.status != 200:
+            flash("Error: #%d, %s " % (
+                r.data.get('errors')[0].get('code'),
+                r.data.get('errors')[0].get('message'))
+                  )
         self.user_info = r.data
-
-        # Print HTTP status code (=200 when no errors).
-        print(r.status)
         print(self.user_info)
-        print(self.user_info['screen_name'])
 
     def get_followers_list(self):
         followers = []
@@ -48,13 +50,14 @@ class TwitterApiAccess(object):
                 _cursor = r.data['next_cursor']
 
             else:
+                flash("Error: #%d, %s " % (
+                    r.data.get('errors')[0].get('code'),
+                    r.data.get('errors')[0].get('message'))
+                      )
                 _cursor = 0
 
             print(followers)
             return followers
-        else:
-            flash('Unable to retrieve followers', 'error')
-            return ""
 
     def get_users_info_by_id(self, id_list=[]):
         return self.get_info(id_list, 'user_id', 'users')
@@ -76,28 +79,39 @@ class TwitterApiAccess(object):
             resource = 'friendships/lookup.json'
         else:
             flash("info_type %s is invalid" % info_type)
-            return ""
+            return []
 
         print('Getting info %s' % info_type)
+        print(data_list, len(data_list))
         # max ids = 100
+        info = []
+        range_ini = 0
         if len(data_list) > self.MAX_IDS:
-            range_ini = 0
             range_end = self.MAX_IDS - 1
-            while range_end != len(data_list) + 1:
-                r = self.api.request(resource, {data_type: data_list[range_ini:range_end]})
-                range_ini += self.MAX_IDS - 1
-                range_end += self.MAX_IDS - 1
-
-                print(r.data)
-                # 666 1488 12345 1212
-                return r.json()  # TODO: implement
-
         else:
-            r = self.api.request(resource, {data_type: data_list})
-            print(type(r.data))
-            return r.data
+            range_end = len(data_list) - 1
 
-        return ""
+        while range_end < len(data_list):
+            print(range_ini, range_end, len(data_list))
+            ids = ",".join(data_list[range_ini:range_end + 1])
+            print("ids ", ids)
+            r = self.api.request(resource, {data_type: ids})
+            if r.status != 200:
+                flash("Error: #%d, %s " % (
+                    r.data.get('errors')[0].get('code'),
+                    r.data.get('errors')[0].get('message'))
+                      )
+                return []
+            print("respo ", r.status)
+            range_ini += self.MAX_IDS
+            range_end += self.MAX_IDS
+
+            print(r.data)
+            # 666 1488 12345 12125
+            info += r.data
+
+        print(info)
+        return info
 
     def get_timeline(self):
         r = self.api.request('statuses/home_timeline.json')
