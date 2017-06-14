@@ -92,7 +92,6 @@ class TwitterApiAccess(object):
             range_end = len(data_list) - 1
 
         while range_end < len(data_list):
-            print(range_ini, range_end, len(data_list))
             ids = ",".join(data_list[range_ini:range_end + 1])
             print("ids ", ids)
             r = self.api.request(resource, {data_type: ids})
@@ -107,7 +106,6 @@ class TwitterApiAccess(object):
             range_end += self.MAX_IDS
 
             print(r.data)
-            # 666 1488 12345 12125
             info += r.data
 
         print(info)

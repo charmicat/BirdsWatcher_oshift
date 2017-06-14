@@ -3,20 +3,22 @@
     <title>{% block title %}BirdsWatcher{% endblock %}</title>
     <link rel=stylesheet type=text/css href="{{ url_for('static',
   filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://use.fontawesome.com/46c2e169c2.js"></script>
 </head>
 <body>
-<h1>BirdsWatcher</h1>
-<ul class=navigation>
-    <li><a href="{{ url_for('index') }}">overview</a></li>
-    {% if g.user %}
-        <li><a href="{{ url_for('logout') }}">sign out [{{ g.user.screen_name }}]</a></li>
+<div class="container">
+    <h1>BirdsWatcher</h1>
+    <p>{% if g.user %}<a href="{{ url_for('logout') }}">sign out [{{ g.user.screen_name }}]</a>
     {% else %}
-        <li><a href="{{ url_for('login') }}">sign in</a></li>
-    {% endif %}
-</ul>
-{% for message in get_flashed_messages() %}
-    <p class=message>{{ message }}</p>
-{% endfor %}
-{% block body %}{% endblock %}
+        <a href="{{ url_for('login') }}"><i class="fa fa-twitter" aria-hidden="true"></i>Sign-in</a>
+    {% endif %}</p>
+
+    {% for message in get_flashed_messages() %}
+        <p class=message>{{ message }}</p>
+    {% endfor %}
+    {% block body %}{% endblock %}
+</div>
 </body>
 </html>

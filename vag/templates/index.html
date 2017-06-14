@@ -1,27 +1,16 @@
 {% extends "layout.html" %}
 {% block body %}
+
     <h2>Overview</h2>
     {% if g.user %}
-        <p>
-            Hello {{ g.user.screen_name }}! Wanna tweet something?
-        </p>
-        <form action="{{ url_for('tweet') }}" method=post>
-            <p>
-                <input type=text name=tweet size=40>
-                <input type=submit value="Tweet!">
-            </p>
-        </form>
-
-        <p>
-            Unfollowers
-        </p>
+        <h4>Unfollowers</h4>
         <ul>
             {% if unfollowers %}
 
                 {% for u in unfollowers %}
                     <li>
                         <a href="http://twitter.com/{{ u.get('screen_name') }}">{{ u.get('screen_name') }}</a>: {{ u.get('name') }}
-                        {% if u.get('connections')['following'] %}
+                        {% if 'following' in u.get('connections') %}
                             <a href="{{ url_for('unfollow') }}?user={{ u.get('screen_name') }}">UNFOLLOW</a> {% else %}
                             <a href="{{ url_for('follow') }}?user={{ u.get('screen_name') }}">FOLLOW</a>
                             </li>
@@ -33,16 +22,30 @@
                 </li>
             {% endif %}
         </ul>
+
+        <h4>New Followers</h4>
+        <ul>
+            {% if followers %}
+
+                {% for u in followers %}
+                    <li>
+                        <a href="http://twitter.com/{{ u.get('screen_name') }}">{{ u.get('screen_name') }}</a>: {{ u.get('name') }}
+                        {% if 'following' in u.get('connections') %}
+                            <a href="{{ url_for('unfollow') }}?user={{ u.get('screen_name') }}">UNFOLLOW</a> {% else %}
+                            <a href="{{ url_for('follow') }}?user={{ u.get('screen_name') }}">FOLLOW</a>
+                            </li>
+                        {% endif %}
+                {% endfor %}
+
+            {% else %}
+                <li>No new followers
+                </li>
+            {% endif %}
+        </ul>
     {% else %}
         <p>
-            Sign in to view your public timeline and to tweet from this
-            example application.
-        </p>
-        <p>
-            <a href="{{ url_for('login') }}"><img src="{{ url_for('static', filename='sign-in.png') }}"
-                                                  alt="sign in"></a>
+            Sign in to check for changes in your followers list.
         </p>
     {% endif %}
-
 
 {% endblock %}
