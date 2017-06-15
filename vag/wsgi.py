@@ -5,7 +5,7 @@ from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from flask_oauthlib.client import OAuth
 from TwitterApiAccess import TwitterApiAccess
-from UnfollowCheck import UnfollowCheck
+from FollowersCheck import FollowersCheck
 
 app = Flask(__name__)
 app.debug = True
@@ -51,7 +51,7 @@ def index():
         print(get_twitter_token())
         twitter_manager = TwitterApiAccess(CONSUMER_KEY, CONSUMER_SECRET, twitter, session)
 
-        uc = UnfollowCheck(twitter_manager)
+        uc = FollowersCheck(twitter_manager)
         unfollowers = uc.unfollowers
         new_followers = uc.new_followers
     return render_template('index.html', unfollowers=unfollowers, followers=new_followers)
