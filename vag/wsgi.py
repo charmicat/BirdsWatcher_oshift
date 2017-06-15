@@ -4,8 +4,8 @@ from flask import Flask
 from flask import g, session, request, url_for, flash
 from flask import redirect, render_template
 from flask_oauthlib.client import OAuth
-from TwitterApiAccess import TwitterApiAccess
-from FollowersCheck import FollowersCheck
+from vag.TwitterApiAccess import TwitterApiAccess
+from vag.FollowersCheck import FollowersCheck
 
 app = Flask(__name__)
 app.debug = True
