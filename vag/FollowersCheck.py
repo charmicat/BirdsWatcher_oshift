@@ -21,7 +21,8 @@ class FollowersCheck(object):
         '''
 
         self.api = api
-        self.CONFIG_FILE = './' + self.api.user_info['screen_name'] + '.ini'
+        data_dir = os.environ['OPENSHIFT_DATA_DIR']
+        self.CONFIG_FILE = data_dir + '/' + self.api.user_info['screen_name'] + '.ini'
         self.unfollowers = None
         self.new_followers = None
         md5, current_followers = self.check_followers()
