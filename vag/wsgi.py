@@ -7,11 +7,11 @@ from flask_oauthlib.client import OAuth
 from vag.TwitterApiAccess import TwitterApiAccess
 from vag.FollowersCheck import FollowersCheck
 
-app = Flask(__name__)
-app.debug = True
-app.secret_key = 'development'
+application = Flask(__name__)
+application.debug = True
+application.secret_key = 'development'
 
-oauth = OAuth(app)
+oauth = OAuth(application)
 
 CONSUMER_KEY = 'Z6RhJkSMTOryXQBvAPlsD6Mcs'
 CONSUMER_SECRET = 'OewfFfiFswQgzDirU2vdbmiIMrr7SXOCpeII83sbWlT8WsNODJ'
@@ -34,14 +34,14 @@ def get_twitter_token():
         return resp['oauth_token'], resp['oauth_token_secret']
 
 
-@app.before_request
+@application.before_request
 def before_request():
     g.user = None
     if 'twitter_oauth' in session:
         g.user = session['twitter_oauth']
 
 
-@app.route('/')
+@application.route('/')
 def index():
     tweets = None
     unfollowers = None
@@ -57,7 +57,7 @@ def index():
     return render_template('index.html', unfollowers=unfollowers, followers=new_followers)
 
 
-@app.route('/tweet', methods=['POST'])
+@application.route('/tweet', methods=['POST'])
 def tweet():
     if g.user is None:
         return redirect(url_for('login', next=request.url))
@@ -80,33 +80,33 @@ def tweet():
     return redirect(url_for('index'))
 
 
-@app.route('/unfollow')
+@application.route('/unfollow')
 def unfollow():
     user = request.args.get('user', '')
     flash("unfollow " + user)
     return redirect(url_for('index'))
 
 
-@app.route('/follow')
+@application.route('/follow')
 def follow():
     user = request.args.get('user', '')
     flash("follow " + user)
     return redirect(url_for('index'))
 
 
-@app.route('/login')
+@application.route('/login')
 def login():
     callback_url = url_for('oauthorized', next=request.args.get('next'))
     return twitter.authorize(callback=callback_url or request.referrer or None)
 
 
-@app.route('/logout')
+@application.route('/logout')
 def logout():
     session.pop('twitter_oauth', None)
     return redirect(url_for('index'))
 
 
-@app.route('/oauthorized')
+@application.route('/oauthorized')
 def oauthorized():
     resp = twitter.authorized_response()
     if resp is None:
@@ -117,4 +117,4 @@ def oauthorized():
 
 
 if __name__ == '__main__':
-    app.run()
+    application.run()
