@@ -8,7 +8,7 @@ from vag.TwitterApiAccess import TwitterApiAccess
 from vag.FollowersCheck import FollowersCheck
 
 application = Flask(__name__)
-application.debug = True
+# application.debug = True
 application.secret_key = 'development'
 
 oauth = OAuth(application)
