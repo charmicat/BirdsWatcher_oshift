@@ -7,7 +7,6 @@ Created on Jan 22, 2016
 '''
 
 from flask import flash
-import json
 
 
 class TwitterApiAccess(object):

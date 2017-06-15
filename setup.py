@@ -14,7 +14,8 @@ setup(
     description='',
     install_requires=
     [
-        'Flask==0.12',
-        'Flask-OAuthlib==0.9.3'
+        'Flask>=0.12',
+        'Flask-OAuthlib>=0.9.3',
+        'Gunicorn'
     ]
 )
