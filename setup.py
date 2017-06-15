@@ -16,6 +16,5 @@ setup(
     [
         'Flask>=0.12',
         'Flask-OAuthlib>=0.9.3',
-        'gunicorn'
     ]
 )
